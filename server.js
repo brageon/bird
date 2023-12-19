@@ -1,12 +1,9 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
-app.use(bodyParser.json());
-
-app.post('/translate', async (req, res) => {
+app.get('/dist', (req, res) => {
+  // Retrieve the input from the request body
   const input = req.body.input;
 
   // Translate the input to integers
@@ -19,7 +16,7 @@ app.post('/translate', async (req, res) => {
 
   // Convert the translations to a string and set the response
   const outputText = translations.join(', ');
-  res.json({ output: outputText });
+  res.send({ output: outputText });
 });
 
 app.listen(port, () => {

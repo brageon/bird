@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Letter to Integer Translator</title>
+    <style>
+      .input-box,
+      .output-box {
+        width: 200px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="input-box">
+      <label for="input">Enter letters:</label>
+      <input type="text" id="input" onkeyup="translate()" />
+      <button onclick="translate()">Translate</button>
+    </div>
+    <div class="output-box">
+      <label for="output">Translated integers:</label>
+      <input type="text" id="output" disabled />
+    </div>
+
+    <script>
+      const translateURL = `http://localhost:${port}/translate`;
+
+      function translate() {
+        const inputText = document.getElementById('input').value;
+
+        // Send the input to the server for translation
+        const request = new XMLHttpRequest();
+        request.open('POST', translateURL);
+        request.setRequestHeader('Content-Type', 'application/json');
+        request.onload = () => {
+          if (request.status === 200) {
+            const response = JSON.parse(request.responseText);
+            const outputText = response.output;
+            document.getElementById('output').value = outputText;
+          } else {
+            console.error('Error:', request.statusText);
+          }
+        };
+        request.send(JSON.stringify({ input: inputText }));
+      }
+    </script>
+  </body>
+</html>
