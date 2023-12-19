@@ -1,12 +1,15 @@
 const express = require('express');
-const app = express();
-const port = process.env.PORT || 8080;
+const bodyParser = require('body-parser');
 
-app.get('/translate', (req, res) => {
-  // Retrieve the input from the request body
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(bodyParser.json());
+
+app.post('/translate', async (req, res) => {
   const input = req.body.input;
 
-  // Convert the input to integers
+  // Translate the input to integers
   const translations = [];
   for (const letter of input) {
     const asciiCode = letter.charCodeAt();
@@ -14,11 +17,9 @@ app.get('/translate', (req, res) => {
     translations.push(integer);
   }
 
-  // Concatenate the translations into a string
+  // Convert the translations to a string and set the response
   const outputText = translations.join(', ');
-
-  // Send the response back to the client
-  res.send({ output: outputText });
+  res.json({ output: outputText });
 });
 
 app.listen(port, () => {
