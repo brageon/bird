@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Letter to Integer Translator</title>
+    <style>
+      .input-box,
+      .output-box {
+        width: 200px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-bottom: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <form id="translate-form" action="/translate" method="post">
+      <div class="input-box">
+        <label for="input">Enter letters:</label>
+        <input type="text" id="input" name="input" onkeyup="translate()" />
+        <button type="submit">Translate</button>
+      </div>
+      <div class="output-box">
+        <label for="output">Translated integers:</label>
+        <input type="text" id="output" disabled />
+      </div>
+    </form>
+
+    <script>
+      // Fetch the input from the form
+      const inputElement = document.getElementById('input');
+      const outputElement = document.getElementById('output');
+
+      // Add event listener to capture keyup event
+      inputElement.addEventListener('keyup', translate());
+
+      // Function to translate the input and update the output
+      function translate() {
+        const inputText = inputElement.value;
+
+        // Send the input to the server for translation
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/translate');
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({ input: inputText }));
+
+        // Handle the response from the server
+        xhr.onload = function() {
+          if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            const outputText = response.output;
+
+            outputElement.value = outputText;
+          } else {
+            console.error('Error:', xhr.statusText);
+          }
+        };
+      }
+    </script>
+  </body>
+</html>
